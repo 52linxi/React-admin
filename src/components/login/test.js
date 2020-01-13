@@ -71,9 +71,9 @@ export default function Test() {
       if (err.response) {
         errMessage = errCode[err.response.status];
       } else {
-        if (err.message.indexOf("Network Error")) {
+        if (err.message.indexOf("Network Error" !== -1)) {
           errMessage = "网络连接错误，请连接WIFI";
-        } else if (err.message.indexOf("timeout")) {
+        } else if (err.message.indexOf("timeout" !== -1)) {
           errMessage = "网络连接超时,请连接WIFI";
         }
       }
