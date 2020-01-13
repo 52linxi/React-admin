@@ -4,6 +4,7 @@ import axios from "axios";
 
 import logo from "./logo.png";
 import "./index.less";
+
 const { Item } = Form;
 
 @Form.create()
@@ -31,14 +32,13 @@ class login extends Component {
     //必须要调用一次
     callback();
   };
+
   //提交数据逻辑
   Login = e => {
     //禁止默认行为
     e.preventDefault();
     //validateFields方法  检验表单正则和收集表单数据
     this.props.form.validateFields((err, values) => {
-      console.log(err, values);
-
       if (!err) {
         //请求参数
         const { username, password } = values;
