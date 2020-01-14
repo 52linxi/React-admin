@@ -7,7 +7,7 @@ import { saveUserAsync } from "../../redux/action";
 //判断是否登陆过  高阶组件
 import withCheckLogin  from '../with-check-login'
 //登录界面的logo图
-import logo from "./logo.png";
+import logo from "../../assets/imgs/logo.png";
 import "./index.less";
 //
 const { Item } = Form;
