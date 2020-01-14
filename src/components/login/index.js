@@ -1,13 +1,19 @@
 import React, { Component } from "react";
+//antd 插件库
 import { Form, Icon, Input, Button, message } from "antd";
-import axios from "axios";
-
+import { connect } from "react-redux";
+//引入异步操作的方法
+import { saveUserAsync } from "../../redux/action";
+//登录界面的logo图
 import logo from "./logo.png";
 import "./index.less";
-
+//
 const { Item } = Form;
-
+//异步请求中间件
+@connect(null, { saveUserAsync })
+//antd的中间件 提取from属性
 @Form.create()
+//登录界面以及逻辑
 class login extends Component {
   //自定义表单正则
   validator = (rule, value, callback) => {
@@ -40,7 +46,10 @@ class login extends Component {
     //validateFields方法  检验表单正则和收集表单数据
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        //请求参数
+        
+        const { username, password } = values;
+        // #region
+        /* //请求参数
         const { username, password } = values;
         // 发送请求
         axios
@@ -64,6 +73,19 @@ class login extends Component {
             // 提示错误给用户看
             message.error("网络错误~");
             // 清空密码
+            this.props.form.resetFields(["password"]);
+          }); */
+        //#endregion
+        this.props
+        //发送请求
+          .saveUserAsync(username, password)
+          //成功跳转页面
+          .then(() => {
+            this.props.history.replace("/");
+          })
+          //失败就提示错误和清空数据
+          .catch(msg => {
+            message.error(msg);
             this.props.form.resetFields(["password"]);
           });
       }

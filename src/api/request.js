@@ -2,6 +2,7 @@
  * 封装axios
  */
 import axios from 'axios';
+import store from '../redux/store'
 //引入外部状态码文件
 import errCode from '../config/errCode';
 //配置axios 
@@ -20,7 +21,7 @@ axiosInstance.interceptors.request.use(
 
   (config) => {
     //token初始化处理
-    let token = '';
+    const token = store.getState().user.token;
     //请求第一件事 检查tpken
     if (token) {
       config.headers.authorization = `bearer ${token}`
@@ -29,6 +30,7 @@ axiosInstance.interceptors.request.use(
     if (config.method === 'POST') {
       config.data = Object.keys(config.data)
         .reduce((prev, curr) => {
+
           prev += `&${curr}=${config.data[curr]}`
 
           return prev
@@ -63,7 +65,7 @@ axiosInstance.interceptors.response.use(
       if (err.message.indexOf("Network Error") !== -1) {
         errMsg = "网络连接错误，请连接网络";
       } else if (err.message.indexOf("timeout" !== -1)) {
-        errMessage = "网络连接超时,请连接WIFI";
+        errMsg = "网络连接超时,请连接WIFI";
       }
     }
     return Promise.reject(errMsg || '服务器错误,请联系管理员')
