@@ -4,11 +4,14 @@ import { Form, Icon, Input, Button, message } from "antd";
 import { connect } from "react-redux";
 //引入异步操作的方法
 import { saveUserAsync } from "../../redux/action";
+//判断是否登陆过  高阶组件
+import withCheckLogin  from '../with-check-login'
 //登录界面的logo图
 import logo from "./logo.png";
 import "./index.less";
 //
 const { Item } = Form;
+@withCheckLogin
 //异步请求中间件
 @connect(null, { saveUserAsync })
 //antd的中间件 提取from属性

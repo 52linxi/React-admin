@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
-
-export default class home extends Component {
+import withCheckLogin from '../../containers/with-check-login'
+//判断是否登录 高阶组件
+@withCheckLogin
+class Home extends Component {
   render() {
     return (
       <div>
@@ -9,3 +11,5 @@ export default class home extends Component {
     )
   }
 }
+
+export default Home
