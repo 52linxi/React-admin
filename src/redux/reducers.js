@@ -3,7 +3,7 @@
  * 用来根据prevState和action生成newState函数模块
  */
 import {combineReducers} from "redux";
-import { SAVE_SUER,REMOVE_USER} from './action-type'
+import { SAVE_SUER,REMOVE_USER,CHANGE_LANGUAGE} from './action-type'
 import { getItem} from '../utils/storage'
  //初始化默认 使用storage的读取方法 将数据存在reduers
 const initUser = getItem('user') || {};
@@ -18,11 +18,12 @@ function user(prevState = initUser, action) {
       return prevState;
   }
 }
-
-function bbb(prevState = "许褚", action) {
+//定义国际化语言
+const langInit = navigator.language || navigator.languages[0] || "zh-CN";
+function language(prevState = langInit, action) {
   switch (action.type) {
-
-
+    case CHANGE_LANGUAGE:
+      return action.data
     default:
       return prevState;
   }
@@ -30,5 +31,5 @@ function bbb(prevState = "许褚", action) {
 
 export default combineReducers({
   user,
-  bbb
+  language
 });

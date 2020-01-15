@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 //antd插件库
 import { Menu, Icon } from "antd";
+// 国际化语言方法
+import {FormattedMessage} from 'react-intl'
 //引入跳转网页和高阶组件获取三大属性
 import { Link, withRouter } from "react-router-dom";
 //引入菜单
@@ -21,7 +23,8 @@ class LeftNav extends Component {
             title={
               <span>
                 <Icon type={menu.icon} />
-                <span>{menu.title}</span>
+                <FormattedMessage id={menu.title} />
+               
               </span>
             }
           >
@@ -40,7 +43,7 @@ class LeftNav extends Component {
       <Item key={menu.path}>
         <Link to={menu.path}>
           <Icon type={menu.icon} />
-          <span>{menu.title}</span>
+          <FormattedMessage id={menu.title} />
         </Link>
       </Item>
     );
