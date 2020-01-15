@@ -3,6 +3,8 @@ import { Button, Icon, Modal } from "antd";
 import screenfull from "screenfull";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import dayjs from "dayjs";
+
 import { removeUser } from "../../../redux/action";
 import "./index.less";
 import { removeItem } from "../../../utils/storage";
@@ -16,11 +18,20 @@ import { removeItem } from "../../../utils/storage";
 class HeaderMain extends Component {
   //定义状态
   state = {
-    isScreenfull: false
+    //初始化全屏状态
+    isScreenfull: false,
+    //初始化时间
+    date: Date.now()
   };
-  //绑定图标变化 触发全屏改变
+
   componentDidMount() {
+    //绑定图标变化 触发全屏改变
     screenfull.on("change", this.handleScreenFullChange);
+    this.timerId = setInterval(() => {
+      this.setState({
+        date: Date.now()
+      });
+    }, 1000);
   }
   // 更新全屏的状态
   handleScreenFullChange = () => {
@@ -56,7 +67,7 @@ class HeaderMain extends Component {
 
   render() {
     //获取isScreenfull方法 判断图标变化
-    const { isScreenfull } = this.state;
+    const { isScreenfull, date } = this.state;
     //获取用户名称
     const { username } = this.props;
     return (
@@ -75,7 +86,9 @@ class HeaderMain extends Component {
         </div>
         <div className="header-main-bottom">
           <span className="header-main-left">商品管理</span>
-          <span className="header-main-rightcc ">中国时间：08：24分</span>
+          <span className="header-main-right">
+            中国时间：{dayjs(date).format("YYYY-MM-DD HH:mm:ss")}
+          </span>
         </div>
       </div>
     );

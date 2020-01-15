@@ -12,6 +12,7 @@
     "axios": "^0.19.1",
     "babel-plugin-import": "^1.13.0",
     "customize-cra": "^0.9.1",
+    "dayjs": "^1.8.19",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
     "react": "^16.12.0",
