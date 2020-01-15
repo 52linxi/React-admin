@@ -6,8 +6,9 @@ import logo from "../../assets/imgs/logo.png";
 //less文件
 import "./index.less";
 //导航组件
-
 import LeftNav from "./left-nav";
+//头部组件
+import HeaderMain from "./header-main";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -41,7 +42,9 @@ export default class BasicLayout extends Component {
           <LeftNav />
         </Sider>
         <Layout>
-          <Header style={{ background: "#fff", padding: 0 }} />
+          <Header style={{ background: "#fff", padding: 0 ,height:80 }}>
+            <HeaderMain />
+          </Header>
           <Content style={{ margin: "0 16px" }}>
             <Breadcrumb style={{ margin: "16px 0" }}>
               <Breadcrumb.Item>User</Breadcrumb.Item>

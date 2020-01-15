@@ -25,7 +25,7 @@ class LeftNav extends Component {
               </span>
             }
           >
-            {menu.children.map(cMenu => this.createMenuItem(cMenu))};
+            {menu.children.map(cMenu => this.createMenuItem(cMenu))}
           </SubMenu>
         );
       } else {
