@@ -55,6 +55,8 @@ class LeftNav extends Component {
       //判断是否有子菜单
       if (menu.children) {
         return menu.children.find(Cmenu => Cmenu.path === pathname);
+      }else{
+        return false
       }
     });
 

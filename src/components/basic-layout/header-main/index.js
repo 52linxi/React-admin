@@ -7,7 +7,7 @@ import { withRouter } from "react-router-dom";
 //调用redux方法高阶组件
 import { connect } from "react-redux";
 //自定义国际化语言的方法
-import {injectIntl}from 'react-intl';
+import {injectIntl,FormattedMessage}from 'react-intl';
 //显示时间的插件库
 import dayjs from "dayjs";
 //引入redux更新语言的方法
@@ -18,6 +18,7 @@ import { removeUser } from "../../../redux/action";
 import "./index.less";
 //引入locastorage方法删除数据
 import { removeItem } from "../../../utils/storage";
+import menus from '../../../config/menus'
 
 //调用自己写的国际化语言的包 提取方法 给组件传递intl方法
 @injectIntl
@@ -84,17 +85,39 @@ class HeaderMain extends Component {
       }
     });
   };
-
+  //改变国际化语言的方法 点击事件
   changeLanguage = () => {
     const language = this.props.language === "en" ? "zh-CN" : "en";
     this.props.changeLanguage(language);
   };
+  //头部标题的名称
+  findTitle=(menus,pathname)=>{
+    for (let index = 0; index < menus.length; index++) {
+      const menu = menus[index];
+      //可能有二级菜单
+      if (menu.children) {
+        for (let index = 0; index < menu.children.length; index++) {
+          const cMenu = menu.children[index];
+          if (cMenu.path === pathname) {
+            return cMenu.title;
+          }
+        }
+      }else{
+        if (menu.path === pathname) {
+          return menu.title;
+        }
+      }
+      
+    }
+  }
 
   render() {
     //获取isScreenfull方法 判断图标变化
     const { isScreenfull, date } = this.state;
     //获取用户名称
-    const { username, language } = this.props;
+    const { username, language,location:{pathname} } = this.props;
+    //标题名称
+    const title = this.findTitle(menus,pathname)
     return (
       <div className="header-main">
         <div className="header-main-top">
@@ -115,7 +138,9 @@ class HeaderMain extends Component {
           </Button>
         </div>
         <div className="header-main-bottom">
-          <span className="header-main-left">商品管理</span>
+          <span className="header-main-left">
+          <FormattedMessage id={title} />
+          </span>
           <span className="header-main-right">
             中国时间：{dayjs(date).format("YYYY-MM-DD HH:mm:ss")}
           </span>
