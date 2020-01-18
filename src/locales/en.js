@@ -13,7 +13,8 @@ const en = {
   line: 'Line',
   bar: 'Bar',
   pie: 'Pie',
-  goout: 'Are you sure you want to log out?'
+  goout: 'Are you sure you want to log out?',
+  BJtime: 'BeiJing Time'
 }
 
 export default en;

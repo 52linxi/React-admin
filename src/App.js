@@ -7,8 +7,6 @@ import { IntlProvider } from "react-intl";
 import { connect } from "react-redux";
 //antd插件库
 import { ConfigProvider } from "antd";
-//主页组件
-import Home from "./components/home";
 //登录组件
 import Login from "./containers/login";
 //主要内容组件
@@ -18,6 +16,8 @@ import { zhCN, en } from "./locales";
 //一下两个antd的语言包
 import zh_CN from "antd/es/locale/zh_CN";
 import zh_US from "antd/es/locale/en_US";
+//引入路由配置config
+import routes from './config/routes'
 
 @connect(state => ({ language: state.language }), null)
 class App extends Component {
@@ -36,7 +36,12 @@ class App extends Component {
             <Switch>
               <Route path="/login" exact component={Login} />
               <BasicLayout>
-                <Route path="/" exact component={Home} />
+              {
+                routes.map((routes)=>{
+               // return <Route path={route.path} exact={route.exact} component={route.component} />
+               return <Route {...routes} key={routes.path} />
+                })
+              }
               </BasicLayout>
             </Switch>
           </Router>

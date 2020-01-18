@@ -10,10 +10,12 @@ import "./index.less";
 import LeftNav from "./left-nav";
 //头部组件
 import HeaderMain from "./header-main";
+//
+import withCheckLogin from '../../containers/with-check-login'
 
 const { Header, Content, Footer, Sider } = Layout;
-
-export default class BasicLayout extends Component {
+@withCheckLogin
+class BasicLayout extends Component {
   state = {
     collapsed: false,
     //定义文字的状态 需要隐藏
@@ -31,7 +33,7 @@ export default class BasicLayout extends Component {
 
   render() {
     const { collapsed, isDisplay } = this.state;
-    //现实主页内容
+    //显示主页内容
     const { children } = this.props;
     return (
       <Layout style={{ minHeight: "100vh" }}>
@@ -48,11 +50,7 @@ export default class BasicLayout extends Component {
           <Header style={{ background: "#fff", padding: 0 ,height:80 }}>
             <HeaderMain />
           </Header>
-          <Content style={{ margin: "0 16px" }}>
-            <Breadcrumb style={{ margin: "16px 0" }}>
-              <Breadcrumb.Item>User</Breadcrumb.Item>
-              <Breadcrumb.Item>Bill</Breadcrumb.Item>
-            </Breadcrumb>
+          <Content style={{ margin: "30px 16px 0 16px" }}>
             <div style={{ padding: 24, background: "#fff", minHeight: 360 }}>
               {children}
             </div>
@@ -65,3 +63,5 @@ export default class BasicLayout extends Component {
     );
   }
 }
+
+export default  BasicLayout

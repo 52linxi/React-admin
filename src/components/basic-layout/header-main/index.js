@@ -18,6 +18,7 @@ import { removeUser } from "../../../redux/action";
 import "./index.less";
 //引入locastorage方法删除数据
 import { removeItem } from "../../../utils/storage";
+
 import menus from '../../../config/menus'
 
 //调用自己写的国际化语言的包 提取方法 给组件传递intl方法
@@ -85,11 +86,13 @@ class HeaderMain extends Component {
       }
     });
   };
+  
   //改变国际化语言的方法 点击事件
   changeLanguage = () => {
     const language = this.props.language === "en" ? "zh-CN" : "en";
     this.props.changeLanguage(language);
   };
+
   //头部标题的名称
   findTitle=(menus,pathname)=>{
     for (let index = 0; index < menus.length; index++) {
@@ -142,7 +145,9 @@ class HeaderMain extends Component {
           <FormattedMessage id={title} />
           </span>
           <span className="header-main-right">
-            中国时间：{dayjs(date).format("YYYY-MM-DD HH:mm:ss")}
+
+          <FormattedMessage  id='BJtime'/> :
+            {dayjs(date).format("YYYY-MM-DD HH:mm:ss")}
           </span>
         </div>
       </div>
