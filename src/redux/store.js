@@ -16,3 +16,4 @@ export default createStore(
     ? composeWithDevTools(applyMiddleware(thunk))
     : applyMiddleware(thunk)
 );
+

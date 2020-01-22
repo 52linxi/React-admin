@@ -3,7 +3,7 @@
  * 用来根据prevState和action生成newState函数模块
  */
 import {combineReducers} from "redux";
-import { SAVE_SUER,REMOVE_USER,CHANGE_LANGUAGE,GET_CATEGORY_LIST,ADD_CATEGORY} from './action-type'
+import { SAVE_SUER,REMOVE_USER,CHANGE_LANGUAGE,GET_CATEGORY_LIST,ADD_CATEGORY,UPDATE_CATEGORY} from './action-type'
 import { getItem} from '../utils/storage'
  //初始化默认 使用storage的读取方法 将数据存在reduers
 const initUser = getItem('user') || {};
@@ -39,6 +39,13 @@ function categories(prevState = categoresInit, action) {
       return action.data
     case ADD_CATEGORY:
       return [...prevState,action.data]
+    case UPDATE_CATEGORY:
+      return prevState.map((category)=>{
+        if (category._id===action.data._id) {
+          return action.data
+        }
+        return category
+      })
     default:
       return prevState
   }

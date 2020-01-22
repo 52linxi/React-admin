@@ -8,12 +8,14 @@ import {
   REMOVE_USER,
   CHANGE_LANGUAGE,
   GET_CATEGORY_LIST,
-  ADD_CATEGORY
+  ADD_CATEGORY,
+  UPDATE_CATEGORY
 } from './action-type'
 import {
   reqLogin,
   reqGetCategoryList,
-  reqAddCategory
+  reqAddCategory,
+  reqUpdateCategory
 } from '../api';
 import {
   setItem
@@ -79,6 +81,25 @@ export const addCategoryAsync = (categoryName) => {
       .then(response => {
         //触发更新
         dispatch(addCategory(response))
+      })
+  }
+}
+
+
+//同步action 请求修改数据列表
+ const updateCategory = (category) => ({
+  type: UPDATE_CATEGORY,
+  data: category
+})
+
+
+//异步action 发送修改列表分类
+export const updateCategoryAsync = (categoryId,categoryName) => {
+  return (dispatch) => {
+    return reqUpdateCategory(categoryId,categoryName)
+      .then(response => {
+        //触发更新
+        dispatch(updateCategory(response))
       })
   }
 }

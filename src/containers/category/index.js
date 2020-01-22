@@ -1,14 +1,24 @@
 import React, { Component } from "react";
-import { Card, Button, Icon, Table, Modal,message } from "antd";
+import { Card, Button, Icon, Table, Modal, message } from "antd";
 import { connect } from "react-redux";
-import { getCategoryListAsync,addCategoryAsync } from "../../redux/action";
+import {
+  getCategoryListAsync,
+  addCategoryAsync,
+  updateCategoryAsync
+} from "../../redux/action";
 import AddCategoryForm from "./add-category-from";
 
-@connect(state => ({ categories: state.categories }), { getCategoryListAsync,addCategoryAsync })
+@connect(state => ({ categories: state.categories }), {
+  getCategoryListAsync,
+  addCategoryAsync,
+  updateCategoryAsync
+})
 class Category extends Component {
   //定义状态对话框
   state = {
-    isShowAddCategory: false
+    isShowCategoryModel: false,
+    //isUpdateCategory: false,
+    category: {}
   };
   //请求数据展示
   componentDidMount() {
@@ -22,66 +32,109 @@ class Category extends Component {
     },
     {
       title: "操作",
-      dataIndex: "operation",
-      render() {
+      //dataIndex: "_id",
+      render: category => {
         return (
           <div>
-            <Button type="link">修改分类</Button>
+            <Button type="link" onClick={this.showCategoryModel(category)}>
+              修改分类
+            </Button>
             <Button type="link">删除分类</Button>
           </div>
         );
       }
     }
   ];
-  //1.校验表单 2.获取数据 3.发送请求 4.更新数据 
+  //1.校验表单 2.获取数据 3.发送请求 4.更新数据
   addCategory = () => {
     console.log(this.addCategoryForm.props.form);
     //获取方法  this.addCategoryForm.props.form通过wrappedComponentRef传Form方法
-    const { validateFields,resetFields } = this.addCategoryForm.props.form;
+    const { validateFields, resetFields } = this.addCategoryForm.props.form;
+    const {
+      category: { name, _id }
+    } = this.state;
 
-    validateFields((err,values)=>{
+    validateFields((err, values) => {
       if (!err) {
-        const {categoryName} = values
-
-        this.props.addCategoryAsync(categoryName)
-          .then(()=>{
+      
+        const { categoryName } = values;
+        //定义个初始值
+        let promise = null;
+        //根据name的值来判断添加还是修改 有就是修改 没有就是添加
+        if (name) {
+          promise = this.props.updateCategoryAsync(_id, categoryName);
+        } else {
+          promise = this.props.addCategoryAsync(categoryName);
+        }
+        //复用代码
+        promise
+          .then(() => {
             //提示成功
-            message.success('添加分类成功')
+            message.success(`${name?'修改':'添加'}分类成功`);
             //清空数据
-            resetFields()
+            resetFields();
             //隐藏对话框
-            this.hiddenAddCategory()
+            this.hiddenAddCategory();
           })
-          .catch(()=>{
-            message.error(err)
-          })
-        
+          .catch(() => {
+            message.error(err);
+          });
       }
-    })
+    });
   };
   //隐藏对话框
   hiddenAddCategory = () => {
     this.setState({
-      isShowAddCategory: false
+      isShowCategoryModel: false
     });
   };
   //显示对话框
-  showAddCategory = () => {
-    this.setState({
-      isShowAddCategory: true
-    });
+  showCategoryModel = (category = {}) => {
+    return () => {
+      this.setState({
+        isShowCategoryModel: true,
+        category
+        //isUpdateCategory: category.name
+      });
+    };
   };
+
+  /*  //修改分类的逻辑
+  showAddCategoryModel = () => {
+    return () => {
+      //更新状态
+      this.setState({
+        isUpdateCategory: false,
+        category:{}
+      });
+      //显示对话框
+      this.showCategoryModel();
+    };
+  };
+
+  //修改分类的逻辑
+  showUpdateCategoryModel = category => {
+    return () => {
+      //更新状态
+      this.setState({
+        isUpdateCategory: true,
+        category
+      });
+      //显示对话框
+      this.showCategoryModel();
+    };
+  }; */
 
   render() {
     const { categories } = this.props;
-    const { isShowAddCategory } = this.state;
+    const { isShowCategoryModel, category } = this.state;
 
     return (
       <div>
         <Card
           title="分类列表"
           extra={
-            <Button type="primary" onClick={this.showAddCategory}>
+            <Button type="primary" onClick={this.showCategoryModel()}>
               <Icon type="plus" />
               分类列表
             </Button>
@@ -100,13 +153,16 @@ class Category extends Component {
             rowKey="_id"
           />
           <Modal
-            title=" 添加分类"
-            visible={isShowAddCategory}
+            title={category.name ? "修改分类" : "添加分类"}
+            visible={isShowCategoryModel}
             onOk={this.addCategory}
             onCancel={this.hiddenAddCategory}
             width={300}
           >
-            <AddCategoryForm wrappedComponentRef={(form) => (this.addCategoryForm = form)} />
+            <AddCategoryForm
+              categoryName={category.name}
+              wrappedComponentRef={form => (this.addCategoryForm = form)}
+            />
           </Modal>
         </Card>
       </div>

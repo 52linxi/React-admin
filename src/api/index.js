@@ -40,3 +40,17 @@ export const reqAddCategory = (categoryName) => {
     }
   })
 }
+
+//请求修改列表数据请求
+export const reqUpdateCategory = (categoryId,categoryName) => {
+  return axiosInstance({
+    //域名地址
+    url: '/category/update',
+    //请求方式
+    method: 'POST',
+    data: {
+      categoryName,
+      categoryId
+    }
+  })
+}
