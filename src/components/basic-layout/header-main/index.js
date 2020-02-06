@@ -101,11 +101,13 @@ class HeaderMain extends Component {
       if (menu.children) {
         for (let index = 0; index < menu.children.length; index++) {
           const cMenu = menu.children[index];
-          if (cMenu.path === pathname) {
+          //有可能出现/product/add的情况 需要处理 不然国际化会报错
+          if (pathname.indexOf(cMenu.path) !== -1) {
             return cMenu.title;
           }
         }
       }else{
+        //一级菜单
         if (menu.path === pathname) {
           return menu.title;
         }

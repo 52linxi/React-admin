@@ -8,6 +8,7 @@ import { Link, withRouter } from "react-router-dom";
 //引入菜单
 import menus from "../../../config/menus";
 
+
 const { SubMenu, Item } = Menu;
 //给组件传递三大组件的高阶组件
 @withRouter
@@ -70,7 +71,13 @@ class LeftNav extends Component {
 
   render() {
     //利用高阶组件获取location.pathname方法
-    const { pathname } = this.props.location;
+    let { pathname } = this.props.location;
+
+    //pathname有可能是product/add  都要改成 product 
+    if (pathname.indexOf('/product') !== -1) {
+      pathname ='/product';
+    }
+
     //调用方法 查找路劲对应是否展开
     const openkeys = this.findOpenKeys(pathname, menus);
 

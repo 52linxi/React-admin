@@ -4,15 +4,22 @@ import { connect } from "react-redux";
 import {
   getCategoryListAsync,
   addCategoryAsync,
-  updateCategoryAsync
+  updateCategoryAsync,
+  deleteCategoryAsync
 } from "../../redux/action";
 import AddCategoryForm from "./add-category-from";
 
-@connect(state => ({ categories: state.categories }), {
-  getCategoryListAsync,
-  addCategoryAsync,
-  updateCategoryAsync
-})
+@connect(
+  state => ({
+    categories: state.categories
+  }),
+  {
+    getCategoryListAsync,
+    addCategoryAsync,
+    updateCategoryAsync,
+    deleteCategoryAsync
+  }
+)
 class Category extends Component {
   //定义状态对话框
   state = {
@@ -22,7 +29,9 @@ class Category extends Component {
   };
   //请求数据展示
   componentDidMount() {
-    this.props.getCategoryListAsync();
+    if (!this.props.categories.length) {
+      this.props.getCategoryListAsync();
+    }
   }
   //表跟列
   columns = [
@@ -37,9 +46,12 @@ class Category extends Component {
         return (
           <div>
             <Button type="link" onClick={this.showCategoryModel(category)}>
-              修改分类
-            </Button>
-            <Button type="link">删除分类</Button>
+              修改分类{" "}
+            </Button>{" "}
+            <Button type="link" onClick={this.delCategory(category)}>
+              {" "}
+              删除分类{" "}
+            </Button>{" "}
           </div>
         );
       }
@@ -56,7 +68,6 @@ class Category extends Component {
 
     validateFields((err, values) => {
       if (!err) {
-      
         const { categoryName } = values;
         //定义个初始值
         let promise = null;
@@ -70,7 +81,7 @@ class Category extends Component {
         promise
           .then(() => {
             //提示成功
-            message.success(`${name?'修改':'添加'}分类成功`);
+            message.success(`${name ? "修改" : "添加"}分类成功`);
             //清空数据
             resetFields();
             //隐藏对话框
@@ -84,6 +95,9 @@ class Category extends Component {
   };
   //隐藏对话框
   hiddenAddCategory = () => {
+    // 清空表单数据
+    this.addCategoryForm.props.form.resetFields();
+
     this.setState({
       isShowCategoryModel: false
     });
@@ -95,6 +109,24 @@ class Category extends Component {
         isShowCategoryModel: true,
         category
         //isUpdateCategory: category.name
+      });
+    };
+  };
+  //删除分类逻辑
+  delCategory = category => {
+    return () => {
+      Modal.confirm({
+        title: `确认要删除${category.name}分类吗?`,
+        onOk: () => {
+          this.props
+            .deleteCategoryAsync(category._id)
+            .then(() => {
+              message.success("删除分类成功");
+            })
+            .catch(err => {
+              message.error(err);
+            });
+        }
       });
     };
   };
@@ -136,7 +168,7 @@ class Category extends Component {
           extra={
             <Button type="primary" onClick={this.showCategoryModel()}>
               <Icon type="plus" />
-              分类列表
+              分类列表{" "}
             </Button>
           }
         >
@@ -162,9 +194,9 @@ class Category extends Component {
             <AddCategoryForm
               categoryName={category.name}
               wrappedComponentRef={form => (this.addCategoryForm = form)}
-            />
-          </Modal>
-        </Card>
+            />{" "}
+          </Modal>{" "}
+        </Card>{" "}
       </div>
     );
   }

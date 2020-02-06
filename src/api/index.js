@@ -42,7 +42,7 @@ export const reqAddCategory = (categoryName) => {
 }
 
 //请求修改列表数据请求
-export const reqUpdateCategory = (categoryId,categoryName) => {
+export const reqUpdateCategory = (categoryId, categoryName) => {
   return axiosInstance({
     //域名地址
     url: '/category/update',
@@ -51,6 +51,47 @@ export const reqUpdateCategory = (categoryId,categoryName) => {
     data: {
       categoryName,
       categoryId
+    }
+  })
+}
+
+//请求删除列表数据请求
+export const reqDeleteCategory = (categoryId) => {
+  return axiosInstance({
+    //域名地址
+    url: '/category/delete',
+    //请求方式
+    method: 'POST',
+    data: {
+
+      categoryId
+    }
+  })
+}
+
+//获取商品列表数据请求
+export const reqGetProductList = (pageNum, pageSize) => {
+  return axiosInstance({
+    //域名地址
+    url: '/product/list',
+    //请求方式
+    method: 'GET',
+    params: {
+      pageNum,
+      pageSize
+    }
+  })
+}
+
+//请求添加商品列表数据
+export const reqAddProduct= ({name,desc,price,detail,categoryId}) => {
+  return axiosInstance({
+    //域名地址
+    url: '/product/Add',
+    //请求方式
+    method: 'POST',
+    data: {
+      name,desc,price,detail,categoryId
     }
   })
 }

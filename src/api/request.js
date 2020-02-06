@@ -3,8 +3,11 @@
  */
 import axios from 'axios';
 import store from '../redux/store'
+import { message } from 'antd';
 //引入外部状态码文件
 import errCode from '../config/errCode';
+import { removeItem } from '../utils/storage'
+import { removeUser } from '../redux/action';
 //配置axios 
 const axiosInstance = axios.create({
   //公共的请求路劲
@@ -58,8 +61,21 @@ axiosInstance.interceptors.response.use(
     let errMsg = '';
 
     if (err.response) {
-      //接收到响应 但是返回的错误
-      errMsg = errCode[err.response.status]
+      // 接受到响应了，但是响应是失败的
+      // 根据响应状态码判断错误类型
+      const status = err.response.status;
+      errMsg = errCode[status];
+
+      if (status === 401) {
+        // token过期了
+        //登录检查就会跳转到login
+        removeItem('user');
+        // 触发redux更新
+        store.dispatch(removeUser());
+
+        message.error('登录过期，请重新登录~');
+      }
+
     } else {
       //没有接收到响应 返回的错误
       if (err.message.indexOf("Network Error") !== -1) {

@@ -9,13 +9,15 @@ import {
   CHANGE_LANGUAGE,
   GET_CATEGORY_LIST,
   ADD_CATEGORY,
-  UPDATE_CATEGORY
+  UPDATE_CATEGORY,
+  DELETE_CATEGORY
 } from './action-type'
 import {
   reqLogin,
   reqGetCategoryList,
   reqAddCategory,
-  reqUpdateCategory
+  reqUpdateCategory,
+  reqDeleteCategory
 } from '../api';
 import {
   setItem
@@ -100,6 +102,24 @@ export const updateCategoryAsync = (categoryId,categoryName) => {
       .then(response => {
         //触发更新
         dispatch(updateCategory(response))
+      })
+  }
+}
+
+//同步action 请求删除数据列表
+const deleteCategory = (id) => ({
+  type: DELETE_CATEGORY,
+  data: id
+})
+
+
+//异步action 发送删除列表分类
+export const deleteCategoryAsync = (categoryId) => {
+  return (dispatch) => {
+    return reqDeleteCategory(categoryId)
+      .then(response => {
+        //触发更新
+        dispatch(deleteCategory(response))
       })
   }
 }
