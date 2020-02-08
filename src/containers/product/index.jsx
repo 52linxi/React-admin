@@ -67,15 +67,16 @@ export default class Product extends Component {
     this.setState({
       isLoading: true
     });
-    const { currentSearchValue } = this;
-    const { searchType } = this.state;
+    const { currentSearchValue } = this; //定义成属性的Value
+    const { searchType } = this.state; //定义成状态的Value
+    //初始化promise 复用代码
     let promise = null;
 
     if (currentSearchValue) {
       promise = reqSearchProduct({
         pageNum,
         pageSize,
-        searchValue: currentSearchValue,
+        searchValue: currentSearchValue, //明天记得再去看视频 为什么要用currentSearchValue
         searchType
       });
     } else {
@@ -87,7 +88,7 @@ export default class Product extends Component {
         this.setState({
           productList: response.list,
           total: response.total,
-          searchValue:currentSearchValue
+          searchValue: currentSearchValue
         });
         message.success(
           `${currentSearchValue ? "搜索" : "获取"}商品列表数据成功`
@@ -102,7 +103,7 @@ export default class Product extends Component {
         });
       });
   };
-
+  //发送求情
   componentDidMount() {
     this.getProductList(1, 3);
   }

@@ -97,12 +97,12 @@ class ProductForm extends Component {
     } = this.props;
 
     const category = categories.find(category => category._id === categoryId);
-
+    //判断分类是否存在
     if (category) {
       //分类存在
       return categoryId;
     } else {
-      //分类不存在
+      //分类不存在  返回一个Value为0
       return "0";
     }
   };
