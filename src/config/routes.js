@@ -2,6 +2,7 @@ import Home from '../components/home'
 import Category from '../containers/category'
 import Product from '../containers/product'
 import ProductForm from '../containers/product/product-form'
+import ProductDeatil from '../containers/product/product-detail'
 
 const routes =[
   {
@@ -27,6 +28,11 @@ const routes =[
   {
     path:'/product/update/:id',
     component:ProductForm,
+    exact:true
+  },
+  {
+    path: '/product/:id',
+    component:ProductDeatil,
     exact:true
   }
 

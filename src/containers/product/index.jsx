@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import { Card, Select, Input, Button, Icon, Table, message } from "antd";
 
-import { reqGetProductList, reqSearchProduct } from "../../api";
+import {
+  reqGetProductList,
+  reqSearchProduct,
+  reqUpdateProductStatus
+} from "../../api";
 
 export default class Product extends Component {
   state = {
@@ -25,16 +29,32 @@ export default class Product extends Component {
     },
     {
       title: "商品价格",
-      dataIndex: "price"
+      dataIndex: "price",
+      render: price => {
+        return `￥${price}`;
+      }
     },
     {
       title: "商品状态",
-      dataIndex: "status",
-      render: () => {
+      //dataIndex: "status",
+      render: ({ _id, status }) => {
+        if (status === 1) {
+          return (
+            <div>
+              <Button type="primary" onClick={this.updateStatus(_id, status)}>
+                上架
+              </Button>
+              <span>已下架</span>
+            </div>
+          );
+        }
+
         return (
           <div>
-            <Button type="primary">上架</Button>
-            <span>已下架</span>
+            <Button type="primary" onClick={this.updateStatus(_id, status)}>
+              下架
+            </Button>
+            <span>已上架</span>
           </div>
         );
       }
@@ -45,8 +65,10 @@ export default class Product extends Component {
       render: product => {
         return (
           <div>
-            <Button type="link">详情</Button>
-            <Button type="link" onClick={this.showUpdateProduct(product)}>
+            <Button type="link" onClick={this.showProduct(product)}>
+              详情
+            </Button>
+            <Button type="link" onClick={this.showProduct(product, "update/")}>
               修改
             </Button>
           </div>
@@ -54,6 +76,43 @@ export default class Product extends Component {
       }
     }
   ];
+
+  //更新商品状态的方法
+  updateStatus = (productId, status) => {
+    return () => {
+      const newStatus = 3 - status;
+      reqUpdateProductStatus(productId, newStatus)
+        .then(res => {
+          //更新列表的状态
+          this.setState({
+            productList: this.state.productList.map(product => {
+              if (product._id === productId) {
+                return {
+                  //展开对象的所有属性
+                  ...product,
+                  //覆盖旧属性
+                  status: newStatus
+                };
+              }
+              return product;
+            })
+          });
+          message.success("更新商品状态成功");
+        })
+        .catch(err => {
+          message.error(err);
+        });
+    };
+  };
+  /*   // 显示商品详情页面
+  showProductDetail = product => {
+    return () => {
+      // 获取当前点击的商品id
+      const id = product._id;
+      // 跳转地址
+      this.props.history.push('/product/' + id, product);
+    };
+  }; 
   //修改商品逻辑
   showUpdateProduct = product => {
     return () => {
@@ -62,7 +121,18 @@ export default class Product extends Component {
       this.props.history.push("/product/update/" + product._id, product);
     };
   };
+ */
+  // 封装上面两个点击跳转函数
+  showProduct = (product, path = "") => {
+    return () => {
+      // 获取当前点击的商品id
+      const id = product._id;
+      // 跳转地址
+      this.props.history.push("/product/" + path + id, product);
+    };
+  };
 
+  //复用代码 发送请求
   getProductList = (pageNum, pageSize) => {
     this.setState({
       isLoading: true
@@ -103,6 +173,7 @@ export default class Product extends Component {
         });
       });
   };
+
   //发送求情
   componentDidMount() {
     this.getProductList(1, 3);

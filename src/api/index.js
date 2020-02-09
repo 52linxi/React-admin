@@ -123,3 +123,27 @@ export const reqSearchProduct= ({searchType,searchValue,pageNum,pageSize}) => {
     }
   })
 }
+
+//请求更新商品状态数据
+export const reqUpdateProductStatus= (productId,status) => {
+  return axiosInstance({
+    //域名地址
+    url: '/product/update/status',
+    //请求方式
+    method: 'POST',
+    data: {
+      productId,status
+    }
+  })
+}
+
+// 请求获取单个商品数据
+export const reqGetProduct = productId => {
+  return axiosInstance({
+    method: 'GET',
+    url: '/product/get',
+    params: {
+      productId
+    }
+  });
+};
