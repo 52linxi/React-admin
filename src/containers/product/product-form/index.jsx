@@ -14,7 +14,7 @@ import BraftEditor from "braft-editor";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { getCategoryListAsync } from "../../../redux/action";
-import { reqAddProduct, reqUpdateProduct } from "../../../api";
+import { reqAddProduct, reqUpdateProduct, reqGetProduct } from "../../../api";
 
 import "./index.less";
 //富文本的样式
@@ -25,11 +25,31 @@ const { Option } = Select;
 @connect(state => ({ categories: state.categories }), { getCategoryListAsync })
 @Form.create()
 class ProductForm extends Component {
+  //定义状态
+  state = {
+    product: {}
+  };
   //只用发一次请求
   componentDidMount() {
     if (!this.props.categories.length) {
       //redux中没有数据才发请求
       this.props.getCategoryListAsync();
+
+      //判断是否是修改商品 并且没有state数据
+      if (!this.isAddProduct() && !this.props.location.state) {
+        //如果条件都不满足 需要发请求数据
+        const productId = this.props.match.params.id;
+        reqGetProduct(productId)
+          .then(res => {
+            //请求数据回来展示
+            this.setState({
+              product: res
+            });
+          })
+          .catch(err => {
+            message.error(err);
+          });
+      }
     }
   }
   //封装方法 判断是修改还是添加商品
@@ -85,16 +105,14 @@ class ProductForm extends Component {
     });
   };
   //处理分类ID的逻辑
-  handleCategoryId = isAddProduct => {
+  handleCategoryId = (isAddProduct,product) => {
+   
     if (isAddProduct) {
+      //暂无分类
       return "0";
     }
-    const {
-      categories,
-      location: {
-        state: { categoryId }
-      }
-    } = this.props;
+    const { categories } = this.props;
+    const { categoryId } = product;
 
     const category = categories.find(category => category._id === categoryId);
     //判断分类是否存在
@@ -108,6 +126,7 @@ class ProductForm extends Component {
   };
 
   render() {
+    const { product } = this.state;
     const {
       form: { getFieldDecorator },
       categories,
@@ -115,7 +134,11 @@ class ProductForm extends Component {
     } = this.props;
 
     //获取路由传递的数据
-    const { state } = location;
+    const routeDate = location.state;
+
+    const state = routeDate || product;
+
+    console.log(state);
 
     //判断是修改还是添加商品
     const isAddProduct = this.isAddProduct();
@@ -174,7 +197,7 @@ class ProductForm extends Component {
                   message: "请选择商品分类"
                 }
               ],
-              initialValue: this.handleCategoryId(isAddProduct) //默认值
+              initialValue: this.handleCategoryId(isAddProduct,state) //默认值
               //默认值
               //initialValue:1
             })(
