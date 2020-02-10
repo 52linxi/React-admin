@@ -12,6 +12,8 @@ import LeftNav from "./left-nav";
 import HeaderMain from "./header-main";
 //
 import withCheckLogin from '../../containers/with-check-login'
+//设置颜色的设置
+import ThemePicker from './theme-picker'
 
 const { Header, Content, Footer, Sider } = Layout;
 @withCheckLogin
@@ -59,6 +61,7 @@ class BasicLayout extends Component {
             Ant Design ©2018 Created by Ant UED
           </Footer>
         </Layout>
+        <ThemePicker />
       </Layout>
     );
   }
